@@ -5,12 +5,17 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const markdownRoutes = require('./routes/markdownRoutes');
+
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
+// Mount routes
+app.use('/api', markdownRoutes);
 
 // Basic Route
 app.get('/api/health', (req, res) => {
