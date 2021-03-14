@@ -17,7 +17,7 @@
       
       <div class="preview-pane">
         <h3>Preview</h3>
-        <div v-html="renderedHtml"></div>
+        <div class="preview-content" v-html="renderedHtml"></div>
       </div>
     </div>
   </div>
@@ -102,5 +102,65 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
   height: 70vh;
+}
+
+.editor-pane, .preview-pane {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.editor-pane h3, .preview-pane h3 {
+  padding: 1.25rem 1.5rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+textarea {
+  flex: 1;
+  width: 100%;
+  padding: 1.5rem;
+  background: transparent;
+  border: none;
+  color: #cbd5e1;
+  font-family: 'Fira Code', monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+}
+
+.preview-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }
 </style>
