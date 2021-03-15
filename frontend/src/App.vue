@@ -25,17 +25,25 @@
 
 <script>
 import axios from 'axios';
+import debounce from 'lodash.debounce';
 
 export default {
   name: 'App',
   data() {
     return {
       markdownText: '# Welcome to MarkDownIt\n\nStart typing to see the preview!',
-      renderedHtml: ''
+      renderedHtml: '',
+      isRendering: false
     };
   },
   methods: {
-    async handleInput() {
+    handleInput: debounce(async function() {
+      if (!this.markdownText) {
+        this.renderedHtml = '';
+        return;
+      }
+      
+      this.isRendering = true;
       try {
         const response = await axios.post('/api/render', {
           markdown: this.markdownText
@@ -43,8 +51,10 @@ export default {
         this.renderedHtml = response.data.data;
       } catch (err) {
         console.error('Render error:', err);
+      } finally {
+        this.isRendering = false;
       }
-    }
+    }, 300)
   },
   mounted() {
     this.handleInput();
