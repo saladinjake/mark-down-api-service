@@ -7,8 +7,17 @@
     
     <div class="main-content">
       <div class="editor-pane">
-        <h3>Editor</h3>
+        <h3>
+          Editor
+          <div class="toolbar">
+            <button @click="insertText('**', '**')">B</button>
+            <button @click="insertText('_', '_')">I</button>
+            <button @click="insertText('### ', '')">H</button>
+            <button @click="insertText('[', '](url)')">🔗</button>
+          </div>
+        </h3>
         <textarea 
+          ref="editor"
           v-model="markdownText" 
           @input="handleInput"
           placeholder="Type your markdown here..."
@@ -16,7 +25,10 @@
       </div>
       
       <div class="preview-pane">
-        <h3>Preview</h3>
+        <h3>
+          Preview
+          <button class="btn-copy" @click="copyHtml">Copy HTML</button>
+        </h3>
         <div class="preview-content" v-html="renderedHtml"></div>
       </div>
     </div>
@@ -54,7 +66,32 @@ export default {
       } finally {
         this.isRendering = false;
       }
-    }, 300)
+    }, 300),
+    
+    insertText(prefix, suffix) {
+      const textarea = this.$refs.editor;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = this.markdownText;
+      const selectedText = text.substring(start, end);
+      
+      this.markdownText = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end);
+      
+      this.$nextTick(() => {
+        textarea.focus();
+        textarea.setSelectionRange(start + prefix.length, end + prefix.length);
+        this.handleInput();
+      });
+    },
+    
+    async copyHtml() {
+      try {
+        await navigator.clipboard.writeText(this.renderedHtml);
+        alert('HTML copied to clipboard!');
+      } catch (err) {
+        console.error('Copy failed:', err);
+      }
+    }
   },
   mounted() {
     this.handleInput();
@@ -135,6 +172,33 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar button, .btn-copy {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.toolbar button:hover, .btn-copy:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn-copy {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: transparent;
 }
 
 textarea {
