@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
+      
       <h1>MarkDownIt</h1>
       <p>Live Markdown Previewer</p>
     </div>
@@ -57,7 +58,7 @@ export default {
       
       this.isRendering = true;
       try {
-        const response = await axios.post('/api/render', {
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/api/render`, {
           markdown: this.markdownText
         });
         this.renderedHtml = response.data.data;
